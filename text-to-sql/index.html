@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NYC Taxi Data Analytics - Text-to-SQL</title>
+    <script type="module" src="https://img.vanna.ai/vanna-components.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            min-height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            margin-bottom: 25px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
+        }
+        h1 {
+            color: #1f2937;
+            margin: 0 0 8px 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .subtitle {
+            color: #6b7280;
+            margin: 0;
+            font-size: 1rem;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .example-questions {
+            margin-bottom: 20px;
+        }
+        .example-questions h3 {
+            color: #374151;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin: 0 0 12px 0;
+        }
+        .example-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 10px;
+        }
+        .example-btn {
+            background-color: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 10px 16px;
+            font-size: 0.875rem;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: normal;
+            text-align: left;
+            line-height: 1.4;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+        }
+        .example-btn:hover {
+            background-color: #e5e7eb;
+            border-color: #9ca3af;
+            transform: translateY(-1px);
+        }
+        .example-btn:active {
+            transform: translateY(0);
+        }
+        .options-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+            padding: 12px;
+            background-color: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toggle-container label {
+            font-size: 0.875rem;
+            color: #374151;
+            cursor: pointer;
+            user-select: none;
+        }
+        .toggle-container input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        vanna-chat {
+            width: 100%;
+            flex: 1;
+            min-height: 600px;
+            display: block;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        .thinking-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            border-radius: 8px;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .thinking-overlay.active {
+            display: flex;
+        }
+        .spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .thinking-text {
+            color: #6b7280;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .example-btn:disabled,
+        .example-btn.processing {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .chat-container {
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚕 NYC Taxi Data Analytics</h1>
+            <p class="subtitle">Ask questions about NYC Taxi data in plain English</p>
+        </header>
+        <main>
+            <div class="example-questions">
+                <h3>💡 Example Questions</h3>
+                <div class="example-buttons" id="exampleButtons">
+                    <button class="example-btn" data-question="What was the total number of trips in January 2025?">What was the total number of trips in January 2025?</button>
+                    <button class="example-btn" data-question="Show me average fare by payment type">Show me average fare by payment type</button>
+                    <button class="example-btn" data-question="Which pickup zones are most popular?">Which pickup zones are most popular?</button>
+                    <button class="example-btn" data-question="What's the impact of congestion fees on revenue?">What's the impact of congestion fees on revenue?</button>
+                    <button class="example-btn" data-question="Show me trip volume by hour of day">Show me trip volume by hour of day</button>
+                    <button class="example-btn" data-question="What payment methods are used most frequently?">What payment methods are used most frequently?</button>
+                    <button class="example-btn" data-question="Compare revenue by payment type">Compare revenue by payment type</button>
+                    <button class="example-btn" data-question="Which payment type has the highest average fare?">Which payment type has the highest average fare?</button>
+                </div>
+            </div>
+            <div class="options-bar">
+                <div class="toggle-container">
+                    <input type="checkbox" id="showSqlOnly" />
+                    <label for="showSqlOnly">Show SQL only (don't execute)</label>
+                </div>
+            </div>
+            <div class="chat-container">
+                <div class="thinking-overlay" id="thinkingOverlay">
+                    <div class="spinner"></div>
+                    <div class="thinking-text">Thinking...</div>
+                </div>
+                <vanna-chat id="vannaChat" sse-endpoint="/api/vanna/v2/chat_sse"></vanna-chat>
+            </div>
+        </main>
+        <script>
+            // Example question buttons
+            const exampleButtons = document.querySelectorAll('.example-btn');
+            const vannaChat = document.getElementById('vannaChat');
+            const showSqlOnlyCheckbox = document.getElementById('showSqlOnly');
+            const thinkingOverlay = document.getElementById('thinkingOverlay');
+            
+            // Track processing state
+            let isProcessing = false;
+            
+            // Functions to manage processing state
+            function setProcessing(processing) {
+                isProcessing = processing;
+                
+                // Show/hide thinking overlay
+                if (processing) {
+                    thinkingOverlay.classList.add('active');
+                } else {
+                    thinkingOverlay.classList.remove('active');
+                }
+                
+                // Enable/disable example buttons
+                exampleButtons.forEach(btn => {
+                    if (processing) {
+                        btn.disabled = true;
+                        btn.classList.add('processing');
+                    } else {
+                        btn.disabled = false;
+                        btn.classList.remove('processing');
+                    }
+                });
+                
+                // Disable/enable chat input (if accessible)
+                if (vannaChat.shadowRoot) {
+                    const input = findInputInShadowDOM(vannaChat.shadowRoot);
+                    if (input) {
+                        input.disabled = processing;
+                        input.readOnly = processing;
+                        if (processing) {
+                            input.setAttribute('placeholder', 'Processing... Please wait.');
+                        } else {
+                            input.removeAttribute('placeholder');
+                        }
+                    }
+                }
+            }
+            
+            // Function to find input field in shadow DOM recursively
+            function findInputInShadowDOM(root, maxDepth = 3) {
+                if (maxDepth <= 0) return null;
+                
+                // Try common input selectors
+                const selectors = [
+                    'input[type="text"]',
+                    'textarea',
+                    'input:not([type="hidden"]):not([type="button"]):not([type="submit"])',
+                    '[contenteditable="true"]'
+                ];
+                
+                for (const selector of selectors) {
+                    const input = root.querySelector(selector);
+                    if (input) return input;
+                }
+                
+                // Search in nested shadow DOMs
+                const shadowHosts = root.querySelectorAll('*');
+                for (const host of shadowHosts) {
+                    if (host.shadowRoot) {
+                        const found = findInputInShadowDOM(host.shadowRoot, maxDepth - 1);
+                        if (found) return found;
+                    }
+                }
+                
+                return null;
+            }
+            
+            // Function to populate input field with question (without sending)
+            function populateQuestion(baseQuestion) {
+                // Wait for component to be ready
+                const tryPopulate = (attempts = 0) => {
+                    if (attempts > 20) {
+                        console.warn('Could not find chat input');
+                        return;
+                    }
+                    
+                    // Try to find input in shadow DOM
+                    if (vannaChat.shadowRoot) {
+                        const input = findInputInShadowDOM(vannaChat.shadowRoot);
+                        if (input) {
+                            // Make sure input is enabled
+                            input.disabled = false;
+                            input.readOnly = false;
+                            
+                            // Set the value
+                            input.value = baseQuestion;
+                            
+                            // Trigger input events to ensure component recognizes the change
+                            input.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+                            input.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
+                            
+                            // Focus the input (this should expand the chat if it's collapsed)
+                            input.focus();
+                            
+                            // Scroll input into view
+                            input.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            return;
+                        }
+                    }
+                    
+                    // Retry after a short delay
+                    setTimeout(() => tryPopulate(attempts + 1), 100);
+                };
+                
+                tryPopulate();
+            }
+            
+            // Function to send message to vanna-chat component
+            function sendMessageToChat(baseQuestion) {
+                // Don't send if already processing
+                if (isProcessing) {
+                    console.log('Message already processing, please wait...');
+                    return;
+                }
+                
+                // Check checkbox state at the moment of sending (not when button is clicked)
+                let question = baseQuestion;
+                if (showSqlOnlyCheckbox.checked) {
+                    question = `Please generate the SQL query for: "${baseQuestion}". IMPORTANT: Do NOT execute this query. Only show me the SQL code without running it against the database.`;
+                }
+                
+                // Wait for component to be ready
+                const trySend = (attempts = 0) => {
+                    if (attempts > 20) {
+                        console.warn('Could not find chat input, user will need to paste manually');
+                        setProcessing(false); // Reset processing state
+                        // Fallback: show alert with the question to copy
+                        alert(`Please paste this question into the chat:\n\n${question}`);
+                        return;
+                    }
+                    
+                    // Try to find input in shadow DOM
+                    if (vannaChat.shadowRoot) {
+                        const input = findInputInShadowDOM(vannaChat.shadowRoot);
+                        if (input) {
+                            // Make sure input is enabled before setting value
+                            input.disabled = false;
+                            input.readOnly = false;
+                            
+                            // Set the value first
+                            input.value = question;
+                            
+                            // Trigger input events to ensure component recognizes the change
+                            input.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+                            input.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
+                            
+                            // Focus the input (this should expand the chat if it's collapsed)
+                            input.focus();
+                            
+                            // Use Enter key to submit (most reliable, won't trigger collapse)
+                            // Small delay to ensure input is fully set and focused
+                            setTimeout(() => {
+                                // Create Enter key events
+                                const enterDown = new KeyboardEvent('keydown', {
+                                    key: 'Enter',
+                                    code: 'Enter',
+                                    keyCode: 13,
+                                    which: 13,
+                                    bubbles: true,
+                                    cancelable: true
+                                });
+                                
+                                const enterPress = new KeyboardEvent('keypress', {
+                                    key: 'Enter',
+                                    code: 'Enter',
+                                    keyCode: 13,
+                                    which: 13,
+                                    bubbles: true,
+                                    cancelable: true
+                                });
+                                
+                                const enterUp = new KeyboardEvent('keyup', {
+                                    key: 'Enter',
+                                    code: 'Enter',
+                                    keyCode: 13,
+                                    which: 13,
+                                    bubbles: true
+                                });
+                                
+                                // Dispatch in order: down, press, up
+                                input.dispatchEvent(enterDown);
+                                input.dispatchEvent(enterPress);
+                                input.dispatchEvent(enterUp);
+                                
+                                // NOW set processing state (after message is sent)
+                                setProcessing(true);
+                                
+                                // Monitor for response completion
+                                monitorResponseCompletion();
+                            }, 150);
+                            return;
+                        }
+                    }
+                    
+                    // Try component methods (if available)
+                    if (vannaChat.sendMessage && typeof vannaChat.sendMessage === 'function') {
+                        vannaChat.sendMessage(question);
+                        // NOW set processing state (after message is sent)
+                        setProcessing(true);
+                        monitorResponseCompletion();
+                        return;
+                    }
+                    
+                    // Retry after a short delay
+                    setTimeout(() => trySend(attempts + 1), 100);
+                };
+                
+                trySend();
+            }
+            
+            // Function to monitor when response is complete
+            function monitorResponseCompletion() {
+                let checkCount = 0;
+                let stableChecks = 0; // Track how many times we've seen "ready" state
+                const maxChecks = 300; // 30 seconds max wait (100ms * 300)
+                const stableThreshold = 3; // Need 3 stable checks to confirm completion
+                
+                const checkComplete = () => {
+                    checkCount++;
+                    
+                    if (checkCount > maxChecks) {
+                        // Timeout - reset processing state
+                        console.warn('Response monitoring timeout');
+                        setProcessing(false);
+                        return;
+                    }
+                    
+                    // Try to detect if response is complete by checking the chat component
+                    if (vannaChat.shadowRoot) {
+                        const input = findInputInShadowDOM(vannaChat.shadowRoot);
+                        
+                        // Check for loading/spinner elements that disappear when done
+                        const loadingElements = vannaChat.shadowRoot.querySelectorAll(
+                            '[class*="loading"], [class*="spinner"], [aria-busy="true"], [class*="thinking"]'
+                        );
+                        
+                        // Check if input is enabled and empty (ready for new message)
+                        const isInputReady = input && !input.disabled && input.value === '';
+                        const hasNoLoadingElements = loadingElements.length === 0;
+                        
+                        if (isInputReady && hasNoLoadingElements) {
+                            stableChecks++;
+                            // Need multiple stable checks to confirm (avoid false positives)
+                            if (stableChecks >= stableThreshold) {
+                                setProcessing(false);
+                                return;
+                            }
+                        } else {
+                            // Reset stable counter if not ready
+                            stableChecks = 0;
+                        }
+                    }
+                    
+                    // Continue checking (faster initially, slower after a bit)
+                    const delay = checkCount < 20 ? 100 : 200;
+                    setTimeout(checkComplete, delay);
+                };
+                
+                // Start checking after a short delay to allow message to be sent
+                setTimeout(checkComplete, 500);
+            }
+            
+            // Also monitor input field to detect when user can type again
+            function setupInputMonitoring() {
+                // Monitor the chat component for changes
+                const observer = new MutationObserver(() => {
+                    if (isProcessing && vannaChat.shadowRoot) {
+                        const input = findInputInShadowDOM(vannaChat.shadowRoot);
+                        if (input && !input.disabled && input.value === '') {
+                            // Input is enabled and empty - likely ready for next message
+                            // Give it a moment to be sure
+                            setTimeout(() => {
+                                if (input.value === '' && !input.disabled) {
+                                    setProcessing(false);
+                                }
+                            }, 1000);
+                        }
+                    }
+                });
+                
+                // Observe the chat component - wait for shadowRoot to be available
+                const tryObserve = () => {
+                    if (vannaChat.shadowRoot) {
+                        observer.observe(vannaChat.shadowRoot, {
+                            childList: true,
+                            subtree: true,
+                            attributes: true,
+                            attributeFilter: ['disabled', 'aria-busy', 'class']
+                        });
+                    } else {
+                        // Retry after a delay
+                        setTimeout(tryObserve, 500);
+                    }
+                };
+                
+                tryObserve();
+            }
+            
+            // Initialize input monitoring when component is ready
+            setTimeout(() => {
+                setupInputMonitoring();
+            }, 1000);
+            
+            // Prevent checkbox events from bubbling and triggering unintended actions
+            showSqlOnlyCheckbox.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+            
+            showSqlOnlyCheckbox.addEventListener('change', (e) => {
+                e.stopPropagation();
+            });
+            
+            // Also prevent label clicks from causing issues
+            const checkboxLabel = document.querySelector('label[for="showSqlOnly"]');
+            if (checkboxLabel) {
+                checkboxLabel.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+            }
+            
+            // Add click handlers to example buttons
+            // If checkbox is ticked, send with SQL-only instruction; otherwise just populate
+            exampleButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const baseQuestion = button.getAttribute('data-question');
+                    
+                    // Check if "Show SQL only" is ticked
+                    if (showSqlOnlyCheckbox.checked) {
+                        // Send with the SQL-only instruction
+                        sendMessageToChat(baseQuestion);
+                    } else {
+                        // Just populate the input - user can send manually
+                        populateQuestion(baseQuestion);
+                    }
+                });
+            });
+            
+            // Better approach: Hook into the component's send functionality
+            function setupMessageInterceptor() {
+                const trySetup = () => {
+                    if (!vannaChat.shadowRoot) {
+                        setTimeout(trySetup, 500);
+                        return;
+                    }
+                    
+                    // Find the input element
+                    const input = findInputInShadowDOM(vannaChat.shadowRoot);
+                    if (!input) {
+                        setTimeout(trySetup, 500);
+                        return;
+                    }
+                    
+                    // Find the form or container that handles submission
+                    let form = input.closest('form');
+                    if (!form) {
+                        // Look for parent elements that might handle submission
+                        let parent = input.parentElement;
+                        while (parent && parent !== vannaChat.shadowRoot) {
+                            if (parent.tagName === 'FORM' || parent.querySelector('button[type="submit"]')) {
+                                form = parent;
+                                break;
+                            }
+                            parent = parent.parentElement;
+                        }
+                    }
+                    
+                    // Intercept form submission if found
+                    if (form) {
+                        form.addEventListener('submit', (e) => {
+                            if (showSqlOnlyCheckbox.checked && input.value.trim()) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                e.stopImmediatePropagation();
+                                
+                                const originalValue = input.value.trim();
+                                const modifiedValue = `Please generate the SQL query for: "${originalValue}". IMPORTANT: Do NOT execute this query. Only show me the SQL code without running it against the database.`;
+                                
+                                // Replace input value
+                                input.value = modifiedValue;
+                                input.dispatchEvent(new Event('input', { bubbles: true }));
+                                
+                                // Allow form to submit with modified value
+                                setTimeout(() => {
+                                    showSqlOnlyCheckbox.checked = false;
+                                    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+                                    showSqlOnlyCheckbox.checked = true;
+                                }, 0);
+                            }
+                        }, true);
+                        
+                        console.log('✅ Form submission interceptor set up');
+                    }
+                    
+                    // Also intercept all keyboard events at the input level
+                    input.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' && !e.shiftKey && showSqlOnlyCheckbox.checked && input.value.trim()) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            e.stopImmediatePropagation();
+                            
+                            const originalValue = input.value.trim();
+                            const modifiedValue = `Please generate the SQL query for: "${originalValue}". IMPORTANT: Do NOT execute this query. Only show me the SQL code without running it against the database.`;
+                            
+                            // Store original checkbox state
+                            const wasChecked = showSqlOnlyCheckbox.checked;
+                            showSqlOnlyCheckbox.checked = false;
+                            
+                            // Set modified value and dispatch events
+                            input.value = modifiedValue;
+                            input.dispatchEvent(new Event('input', { bubbles: true }));
+                            input.dispatchEvent(new Event('change', { bubbles: true }));
+                            
+                            // Trigger Enter after a tick
+                            requestAnimationFrame(() => {
+                                const newEnter = new KeyboardEvent('keydown', {
+                                    key: 'Enter',
+                                    code: 'Enter',
+                                    keyCode: 13,
+                                    which: 13,
+                                    bubbles: true,
+                                    cancelable: false
+                                });
+                                input.dispatchEvent(newEnter);
+                                
+                                // Restore checkbox
+                                setTimeout(() => {
+                                    showSqlOnlyCheckbox.checked = wasChecked;
+                                }, 100);
+                            });
+                            
+                            return false;
+                        }
+                    }, { capture: true, passive: false });
+                    
+                    // Find and intercept send button clicks
+                    const buttons = vannaChat.shadowRoot.querySelectorAll('button');
+                    buttons.forEach(btn => {
+                        // Look for send/submit buttons
+                        if (btn.type === 'submit' || 
+                            btn.textContent.toLowerCase().includes('send') ||
+                            btn.querySelector('svg')) { // Icon buttons
+                            
+                            btn.addEventListener('click', (e) => {
+                                if (showSqlOnlyCheckbox.checked && input.value.trim()) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    e.stopImmediatePropagation();
+                                    
+                                    const originalValue = input.value.trim();
+                                    const modifiedValue = `Please generate the SQL query for: "${originalValue}". IMPORTANT: Do NOT execute this query. Only show me the SQL code without running it against the database.`;
+                                    
+                                    showSqlOnlyCheckbox.checked = false;
+                                    input.value = modifiedValue;
+                                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                                    
+                                    setTimeout(() => {
+                                        btn.click();
+                                        showSqlOnlyCheckbox.checked = true;
+                                    }, 0);
+                                }
+                            }, true);
+                        }
+                    });
+                    
+                    console.log('✅ Message interceptor set up');
+                };
+                
+                trySetup();
+            }
+            
+            // Setup the interceptor when component is ready
+            // Commented out - using simpler approach with button click handler
+            // setTimeout(() => {
+            //     setupMessageInterceptor();
+            // }, 1000);
+        </script>
+    </div>
+</body>
+</html>
+
