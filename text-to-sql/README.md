@@ -55,6 +55,24 @@ AI-powered natural language query interface for NYC Taxi Analytics using Vanna A
 
 ## Local Development
 
+### Quick Start (Automated)
+
+Use the convenience script to automatically set up and run:
+
+```bash
+cd text-to-sql
+./run_local.sh
+```
+
+This script will:
+- Generate `.env` from Terraform outputs (if missing)
+- Create virtual environment (if needed)
+- Install/update dependencies
+- Validate configuration
+- Start the server with auto-reload
+
+### Manual Setup
+
 1. **Install dependencies**:
    ```bash
    cd text-to-sql
@@ -75,6 +93,11 @@ AI-powered natural language query interface for NYC Taxi Analytics using Vanna A
    LLM_MODEL=gpt-5-mini
    # Optional: simulate EFS locally
    # EFS_MOUNT_POINT=/path/to/local/efs
+   ```
+
+   Or generate from Terraform:
+   ```bash
+   python3 setup_local_env.py
    ```
 
 3. **Run the server**:
