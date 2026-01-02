@@ -74,13 +74,19 @@ Thumbs.db
 *.cache
 *.gz
 *.zip
-*.sh
 *.1
 *.hcl
 *.sqlite3
 *.bin
 *.tfvars
 terraform/terraform.tfvars
+
+# Shell scripts (allow infrastructure and development scripts)
+# Ignore all .sh files except those in specific directories
+*.sh
+!terraform/
+!text-to-sql/
+!scripts/
 # CSV files (but allow lookup CSVs in data/ directory)
 *.csv
 !data/
