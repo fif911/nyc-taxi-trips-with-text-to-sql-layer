@@ -3,8 +3,8 @@
 Execute Glue crawlers for raw, processed, and insights data.
 
 Usage:
-    python3 1_execute_processed_crawlers.py [CRAWLER_TYPE] [OPTIONS]
-    python3 scripts/step8/1_execute_processed_crawlers.py [CRAWLER_TYPE] [OPTIONS]
+    python3 1_execute_crawlers.py [CRAWLER_TYPE] [OPTIONS]
+    python3 scripts/run_glue_crawlers/1_execute_crawlers.py [CRAWLER_TYPE] [OPTIONS]
 
 CRAWLER_TYPE:
     raw        Execute raw data crawler
@@ -17,18 +17,18 @@ Options:
     -h, --help Show this help message
 
 Examples:
-    # From scripts/step8/ directory:
-    python3 1_execute_processed_crawlers.py              # Execute all crawlers (default)
-    python3 1_execute_processed_crawlers.py all          # Execute all crawlers
-    python3 1_execute_processed_crawlers.py all --wait   # Execute all crawlers and wait for completion
-    python3 1_execute_processed_crawlers.py processed    # Execute only processed crawler
-    python3 1_execute_processed_crawlers.py insights --wait  # Execute insights crawler and wait
+    # From scripts/run_glue_crawlers/ directory:
+    python3 1_execute_crawlers.py              # Execute all crawlers (default)
+    python3 1_execute_crawlers.py all          # Execute all crawlers
+    python3 1_execute_crawlers.py all --wait   # Execute all crawlers and wait for completion
+    python3 1_execute_crawlers.py processed    # Execute only processed crawler
+    python3 1_execute_crawlers.py insights --wait  # Execute insights crawler and wait
     python3 1_execute_processed_crawlers.py raw          # Execute only raw crawler
     
     # From project root:
-    python3 scripts/step8/1_execute_processed_crawlers.py
-    python3 scripts/step8/1_execute_processed_crawlers.py all --wait
-    python3 scripts/step8/1_execute_processed_crawlers.py processed
+    python3 scripts/run_glue_crawlers/1_execute_processed_crawlers.py
+    python3 scripts/run_glue_crawlers/1_execute_processed_crawlers.py all --wait
+    python3 scripts/run_glue_crawlers/1_execute_processed_crawlers.py processed
 """
 import sys
 import argparse
@@ -362,7 +362,7 @@ def main():
             print()
             print("Next steps:")
             print("  1. Wait 2-5 minutes for crawler(s) to complete")
-            print("  2. Run: python3 scripts/step8/2_verify_processed_tables.py")
+            print("  2. Run: python3 scripts/run_glue_crawlers/2_verify_tables.py")
     else:
         print("=" * 60)
         print("✗ Some crawlers failed to start")

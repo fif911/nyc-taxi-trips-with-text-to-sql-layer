@@ -4,22 +4,22 @@ Download NYC Yellow Taxi Parquet files from public source.
 
 Usage:
     python3 1_download_data.py [OPTIONS] [MONTHS...]
-    python3 scripts/step4/1_download_data.py [OPTIONS] [MONTHS...]
+    python3 scripts/ingest_raw_data/1_download_data.py [OPTIONS] [MONTHS...]
 
 Options:
     -y, --year YEAR      Year to download (default: 2025)
     -h, --help           Show this help message
 
 Examples:
-    # From scripts/step4/ directory:
+    # From scripts/ingest_raw_data/ directory:
     python3 1_download_data.py                     # Download months 01-10 (default)
     python3 1_download_data.py 01 02              # Download January and February
     python3 1_download_data.py 01-03               # Download January through March
     python3 1_download_data.py --year 2024 01-12   # Download all months of 2024
     
     # From project root:
-    python3 scripts/step4/1_download_data.py 01 02
-    python3 scripts/step4/1_download_data.py --year 2024 01-12
+    python3 scripts/ingest_raw_data/1_download_data.py 01 02
+    python3 scripts/ingest_raw_data/1_download_data.py --year 2024 01-12
 """
 import os
 import sys
@@ -27,7 +27,7 @@ import argparse
 import urllib.request
 from pathlib import Path
 
-# Get project root (3 levels up from scripts/step4/)
+# Get project root (3 levels up from scripts/ingest_raw_data/)
 project_root = Path(__file__).parent.parent.parent
 
 
@@ -74,15 +74,15 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # From scripts/step4/ directory:
+  # From scripts/ingest_raw_data/ directory:
   python3 %(prog)s                     # Download months 01-10 (default)
   python3 %(prog)s 01 02              # Download January and February
   python3 %(prog)s 01-03               # Download January through March
   python3 %(prog)s --year 2024 01-12   # Download all months of 2024
   
   # From project root:
-  python3 scripts/step4/%(prog)s 01 02
-  python3 scripts/step4/%(prog)s --year 2024 01-12
+  python3 scripts/ingest_raw_data/%(prog)s 01 02
+  python3 scripts/ingest_raw_data/%(prog)s --year 2024 01-12
         """
     )
     parser.add_argument("-y", "--year", default="2025", help="Year to download (default: 2025)")

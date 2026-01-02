@@ -4,20 +4,20 @@ Upload PySpark job files to S3 for EMR Serverless execution.
 
 Usage:
     python3 1_upload_jobs.py [OPTIONS]
-    python3 scripts/step7/1_upload_jobs.py [OPTIONS]
+    python3 scripts/run_pyspark_jobs/1_upload_jobs.py [OPTIONS]
 
 Options:
     -b, --bucket BUCKET  S3 bucket name (overrides SSM Parameter Store)
     -h, --help           Show this help message
 
 Examples:
-    # From scripts/step7/ directory:
+    # From scripts/run_pyspark_jobs/ directory:
     python3 1_upload_jobs.py                  # Upload jobs using SSM Parameter Store config
     python3 1_upload_jobs.py --bucket my-bucket  # Upload jobs with custom bucket
     
     # From project root:
-    python3 scripts/step7/1_upload_jobs.py
-    python3 scripts/step7/1_upload_jobs.py --bucket my-custom-bucket
+    python3 scripts/run_pyspark_jobs/1_upload_jobs.py
+    python3 scripts/run_pyspark_jobs/1_upload_jobs.py --bucket my-custom-bucket
 """
 import sys
 import os

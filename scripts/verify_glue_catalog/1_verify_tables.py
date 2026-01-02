@@ -3,8 +3,8 @@
 Verify that a Glue table exists in the Glue Data Catalog.
 
 Usage:
-    python3 1_verify_table.py [OPTIONS] [TABLE_NAME]
-    python3 scripts/step5/1_verify_table.py [OPTIONS] [TABLE_NAME]
+    python3 1_verify_tables.py [OPTIONS] [TABLE_NAME]
+    python3 scripts/verify_glue_catalog/1_verify_tables.py [OPTIONS] [TABLE_NAME]
 
 TABLE_NAME:
     raw        Verify raw table (default)
@@ -17,7 +17,7 @@ Options:
     -h, --help               Show this help message
 
 Examples:
-    # From scripts/step5/ directory:
+    # From scripts/verify_glue_catalog/ directory:
     python3 1_verify_table.py raw              # Verify raw table (default)
     python3 1_verify_table.py processed        # Verify processed tables
     python3 1_verify_table.py insights         # Verify insights tables

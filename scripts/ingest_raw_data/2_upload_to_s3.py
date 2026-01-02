@@ -4,7 +4,7 @@ Upload NYC Yellow Taxi Parquet files to S3.
 
 Usage:
     python3 2_upload_to_s3.py [OPTIONS] [MONTHS...]
-    python3 scripts/step4/2_upload_to_s3.py [OPTIONS] [MONTHS...]
+    python3 scripts/ingest_raw_data/2_upload_to_s3.py [OPTIONS] [MONTHS...]
 
 Options:
     -y, --year YEAR      Year to upload (default: 2025)
@@ -12,7 +12,7 @@ Options:
     -h, --help           Show this help message
 
 Examples:
-    # From scripts/step4/ directory:
+    # From scripts/ingest_raw_data/ directory:
     python3 2_upload_to_s3.py                     # Upload months 01-10 (default)
     python3 2_upload_to_s3.py 01 02              # Upload January and February
     python3 2_upload_to_s3.py 01-03               # Upload January through March
@@ -20,8 +20,8 @@ Examples:
     python3 2_upload_to_s3.py --bucket my-bucket 01 02  # Upload with custom bucket
     
     # From project root:
-    python3 scripts/step4/2_upload_to_s3.py 01 02
-    python3 scripts/step4/2_upload_to_s3.py --year 2024 --bucket my-bucket 01-12
+    python3 scripts/ingest_raw_data/2_upload_to_s3.py 01 02
+    python3 scripts/ingest_raw_data/2_upload_to_s3.py --year 2024 --bucket my-bucket 01-12
 """
 import sys
 import os
@@ -68,7 +68,7 @@ def find_data_file(filename: str, project_root: Path) -> Path:
     if current_file.exists():
         return current_file
     
-    # Fallback: try scripts/step4/data/raw (legacy location)
+    # Fallback: try scripts/ingest_raw_data/data/raw (legacy location)
     script_file = Path(__file__).parent / "data" / "raw" / filename
     if script_file.exists():
         return script_file

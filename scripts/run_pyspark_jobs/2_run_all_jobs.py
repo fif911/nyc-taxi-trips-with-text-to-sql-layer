@@ -3,8 +3,8 @@
 Upload PySpark jobs to S3 and run all jobs in parallel on EMR Serverless.
 
 Usage:
-    python3 3_run_all_jobs.py [OPTIONS]
-    python3 scripts/step7/3_run_all_jobs.py [OPTIONS]
+    python3 2_run_all_jobs.py [OPTIONS]
+    python3 scripts/run_pyspark_jobs/2_run_all_jobs.py [OPTIONS]
 
 Options:
     --skip-upload        Skip uploading jobs to S3 (assumes already uploaded)
@@ -13,14 +13,14 @@ Options:
     -h, --help           Show this help message
 
 Examples:
-    # From scripts/step7/ directory:
-    python3 3_run_all_jobs.py                    # Upload and submit all jobs in parallel
-    python3 3_run_all_jobs.py --wait           # Upload, submit all jobs, wait for all to complete
-    python3 3_run_all_jobs.py --skip-upload --wait  # Skip upload, submit all jobs, wait for completion
+    # From scripts/run_pyspark_jobs/ directory:
+    python3 2_run_all_jobs.py                    # Upload and submit all jobs in parallel
+    python3 2_run_all_jobs.py --wait           # Upload, submit all jobs, wait for all to complete
+    python3 2_run_all_jobs.py --skip-upload --wait  # Skip upload, submit all jobs, wait for completion
     
     # From project root:
-    python3 scripts/step7/3_run_all_jobs.py --wait
-    python3 scripts/step7/3_run_all_jobs.py --skip-upload --wait
+    python3 scripts/run_pyspark_jobs/2_run_all_jobs.py --wait
+    python3 scripts/run_pyspark_jobs/2_run_all_jobs.py --skip-upload --wait
 """
 import sys
 import os
@@ -45,7 +45,7 @@ def submit_job(job_name, script_dir, wait=False):
     
     try:
         result = subprocess.run(
-            [sys.executable, "-u", str(script_dir / "2_run_job.py"), job_name] + wait_flag,
+            [sys.executable, "-u", str(script_dir / "run_job.py"), job_name] + wait_flag,
             check=True,
             env=env,
             capture_output=True,
@@ -160,7 +160,7 @@ def main():
             
             try:
                 result = subprocess.run(
-                    [sys.executable, "-u", str(script_dir / "2_run_job.py"), job] + wait_flag,
+                    [sys.executable, "-u", str(script_dir / "run_job.py"), job] + wait_flag,
                     check=True,
                     env=env
                 )

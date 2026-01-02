@@ -4,7 +4,7 @@ Test an Athena query on a Glue table.
 
 Usage:
     python3 2_test_athena_query.py [OPTIONS] [TABLE_NAME]
-    python3 scripts/step5/2_test_athena_query.py [OPTIONS] [TABLE_NAME]
+    python3 scripts/verify_glue_catalog/2_test_athena_query.py [OPTIONS] [TABLE_NAME]
 
 TABLE_NAME:
     raw        Query raw table (default)
@@ -19,7 +19,7 @@ Options:
     -h, --help                  Show this help message
 
 Examples:
-    # From scripts/step5/ directory:
+    # From scripts/verify_glue_catalog/ directory:
     python3 2_test_athena_query.py raw              # Test query on raw table (default)
     python3 2_test_athena_query.py processed        # Test query on processed table
     python3 2_test_athena_query.py insights         # Test query on insights table
@@ -27,9 +27,9 @@ Examples:
     python3 2_test_athena_query.py -d my_db -w my_workgroup raw  # With custom database and workgroup
     
     # From project root:
-    python3 scripts/step5/2_test_athena_query.py raw
-    python3 scripts/step5/2_test_athena_query.py processed
-    python3 scripts/step5/2_test_athena_query.py -q "SELECT * FROM my_db.my_table LIMIT 10"
+    python3 scripts/verify_glue_catalog/2_test_athena_query.py raw
+    python3 scripts/verify_glue_catalog/2_test_athena_query.py processed
+    python3 scripts/verify_glue_catalog/2_test_athena_query.py -q "SELECT * FROM my_db.my_table LIMIT 10"
 """
 import sys
 import argparse

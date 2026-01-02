@@ -23,32 +23,43 @@ aws configure
 
 ## Scripts
 
-### Step 4: Data Ingestion
+### Ingest Raw Data
 
-- `step4/1_download_data.py` - Download NYC Yellow Taxi data from public source
-- `step4/2_upload_to_s3.py` - Upload downloaded data to S3
-- `step4/3_validate_upload.py` - Validate uploaded files in S3
+Download and upload NYC Yellow Taxi data from public source to S3.
 
-### Step 5: Glue Catalog
+- `ingest_raw_data/1_download_data.py` - Download NYC Yellow Taxi data from public source
+- `ingest_raw_data/2_upload_to_s3.py` - Upload downloaded data to S3
+- `ingest_raw_data/3_validate_upload.py` - Validate uploaded files in S3
 
-- `step5/1_verify_table.py` - Verify Glue tables exist in the Data Catalog
-- `step5/2_test_athena_query.py` - Test Athena queries on Glue tables
+### Verify Glue Catalog
 
-### Step 7: EMR Jobs
+Verify Glue tables exist and test Athena queries.
 
-- `step7/1_upload_jobs.py` - Upload PySpark jobs and data files to S3
-- `step7/2_run_job.py` - Submit a single job to EMR Serverless
-- `step7/3_run_all_jobs.py` - Run all jobs sequentially (includes create_lookup_tables.py)
+- `verify_glue_catalog/1_verify_tables.py` - Verify Glue tables exist in the Data Catalog
+- `verify_glue_catalog/2_test_athena_query.py` - Test Athena queries on Glue tables
 
-### Step 8: Catalog Processed Data
+### Run PySpark Jobs
 
-- `step8/1_execute_processed_crawlers.py` - Execute Glue crawlers (raw, processed, insights, or all)
-- `step8/2_verify_processed_tables.py` - Verify processed and insights tables were created
+Upload and execute PySpark jobs on EMR Serverless.
 
-### Step 9: Athena Query Layer
+- `run_pyspark_jobs/1_upload_jobs.py` - Upload PySpark jobs and data files to S3
+- `run_pyspark_jobs/2_run_all_jobs.py` - Run all jobs sequentially (includes create_lookup_tables.py)
+- `run_pyspark_jobs/3_check_job_results.py` - Check EMR Serverless job logs and results
+- `run_pyspark_jobs/run_job.py` - Helper script to run a single PySpark job (used by 2_run_all_jobs.py)
 
-- `step9/1_run_sample_queries.py` - Run sample Athena queries on Glue tables
-- `step9/2_create_views.py` - Create Athena views for common queries (optional)
+### Run Glue Crawlers
+
+Execute Glue crawlers to catalog processed data.
+
+- `run_glue_crawlers/1_execute_crawlers.py` - Execute Glue crawlers (raw, processed, insights, or all)
+- `run_glue_crawlers/2_verify_tables.py` - Verify processed and insights tables were created
+- `run_glue_crawlers/3_check_crawlers.py` - Check crawler status and results
+
+### Test Queries
+
+Run sample Athena queries to verify the data pipeline.
+
+- `test_queries/1_run_sample_queries.py` - Run sample Athena queries on Glue tables
 
 ## Configuration
 

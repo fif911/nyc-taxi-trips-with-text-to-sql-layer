@@ -2,18 +2,32 @@
 """
 Test script to verify Vanna AI endpoint is working correctly.
 Connects to the API and runs a sample query.
+
+Usage:
+    python test_query.py [API_URL] [QUESTION]
+    
+    API_URL: Base URL of the Vanna AI API (default: http://localhost:8000)
+    QUESTION: Question to test (default: "What payment methods are used most frequently?")
+    
+Examples:
+    python test_query.py                                    # Test localhost
+    python test_query.py http://100.52.54.194:8000         # Test EC2 instance
+    python test_query.py http://localhost:8000 "Show me trip volume by hour"  # Custom question
 """
 import requests
 import json
 import sys
+import os
+import argparse
 from typing import Dict, Any
 
-API_URL = "http://localhost:8000"
+DEFAULT_API_URL = "http://localhost:8000"
+DEFAULT_QUESTION = "What payment methods are used most frequently?"
 
-def test_health() -> bool:
+def test_health(api_url: str) -> bool:
     """Test health endpoint"""
     try:
-        response = requests.get(f"{API_URL}/health", timeout=10)
+        response = requests.get(f"{api_url}/health", timeout=10)
         if response.status_code == 200:
             data = response.json()
             print(f"✅ Health check passed: {data}")
@@ -25,11 +39,11 @@ def test_health() -> bool:
         print(f"❌ Health check error: {e}")
         return False
 
-def test_query(question: str) -> Dict[str, Any]:
+def test_query(api_url: str, question: str) -> Dict[str, Any]:
     """Test a query via the chat endpoint"""
     try:
         # Use the chat_poll endpoint (simpler than SSE)
-        endpoint = f"{API_URL}/api/vanna/v2/chat_poll"
+        endpoint = f"{api_url}/api/vanna/v2/chat_poll"
         
         payload = {
             "message": question,
@@ -79,17 +93,45 @@ def test_query(question: str) -> Dict[str, Any]:
 
 def main():
     """Run all tests"""
+    parser = argparse.ArgumentParser(
+        description="Test Vanna AI API endpoint",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python test_query.py                                    # Test localhost
+  python test_query.py http://100.52.54.194:8000         # Test EC2 instance
+  python test_query.py http://localhost:8000 "Show me trip volume by hour"  # Custom question
+        """
+    )
+    parser.add_argument(
+        "api_url",
+        nargs="?",
+        default=os.getenv("VANNA_API_URL", DEFAULT_API_URL),
+        help=f"Base URL of the Vanna AI API (default: {DEFAULT_API_URL} or VANNA_API_URL env var)"
+    )
+    parser.add_argument(
+        "question",
+        nargs="?",
+        default=DEFAULT_QUESTION,
+        help=f"Question to test (default: '{DEFAULT_QUESTION}')"
+    )
+    
+    args = parser.parse_args()
+    api_url = args.api_url.rstrip('/')
+    
     print("=" * 60)
     print("Vanna AI API Test")
     print("=" * 60)
+    print(f"API URL: {api_url}")
+    print()
     
     # Test 1: Health check
-    if not test_health():
+    if not test_health(api_url):
         print("\n❌ Health check failed, aborting tests")
         sys.exit(1)
     
-    # Test 2: Simple query
-    result = test_query("What payment methods are used most frequently?")
+    # Test 2: Query
+    result = test_query(api_url, args.question)
     
     # Check if we got a successful response with chunks
     if result and ('chunks' in result and len(result.get('chunks', [])) > 0):

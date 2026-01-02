@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """
-Submit a PySpark job to EMR Serverless.
+Helper script to submit a single PySpark job to EMR Serverless.
+
+This is a helper function used by 2_run_all_jobs.py to run individual jobs.
+Can also be used standalone to run a single job.
 
 Usage:
-    python3 2_run_job.py <job_script_name> [OPTIONS]
-    python3 scripts/step7/2_run_job.py <job_script_name> [OPTIONS]
+    python3 run_job.py <job_script_name> [OPTIONS]
+    python3 scripts/run_pyspark_jobs/run_job.py <job_script_name> [OPTIONS]
 
 Arguments:
     job_script_name       Name of the job script (e.g., data_validation_cleaning.py)
@@ -17,17 +20,17 @@ Options:
     -h, --help            Show this help message
 
 Examples:
-    # From scripts/step7/ directory:
-    python3 2_run_job.py data_validation_cleaning.py  # Submit job without waiting
-    python3 2_run_job.py data_validation_cleaning.py --wait  # Submit and wait for completion
-    python3 2_run_job.py trip_metrics_aggregation.py --wait
-    python3 2_run_job.py geospatial_analysis.py --wait
-    python3 2_run_job.py revenue_insights.py --wait
-    python3 2_run_job.py data_validation_cleaning.py -a app-123 --bucket my-bucket  # With custom app ID and bucket
+    # From scripts/run_pyspark_jobs/ directory:
+    python3 run_job.py data_validation_cleaning.py  # Submit job without waiting
+    python3 run_job.py data_validation_cleaning.py --wait  # Submit and wait for completion
+    python3 run_job.py trip_metrics_aggregation.py --wait
+    python3 run_job.py geospatial_analysis.py --wait
+    python3 run_job.py revenue_insights.py --wait
+    python3 run_job.py data_validation_cleaning.py -a app-123 --bucket my-bucket  # With custom app ID and bucket
     
     # From project root:
-    python3 scripts/step7/2_run_job.py data_validation_cleaning.py --wait
-    python3 scripts/step7/2_run_job.py trip_metrics_aggregation.py --wait
+    python3 scripts/run_pyspark_jobs/run_job.py data_validation_cleaning.py --wait
+    python3 scripts/run_pyspark_jobs/run_job.py trip_metrics_aggregation.py --wait
 """
 import sys
 import argparse

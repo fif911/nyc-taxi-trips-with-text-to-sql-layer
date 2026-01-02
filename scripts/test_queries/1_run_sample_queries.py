@@ -10,7 +10,7 @@ It runs three sample queries:
 
 Usage:
     python3 1_run_sample_queries.py [OPTIONS]
-    python3 scripts/step9/1_run_sample_queries.py [OPTIONS]
+    python3 scripts/test_queries/1_run_sample_queries.py [OPTIONS]
 
 Options:
     -d, --database DATABASE     Database name (overrides SSM Parameter Store)
@@ -20,14 +20,14 @@ Options:
     -h, --help                  Show this help message
 
 Examples:
-    # From scripts/step9/ directory:
+    # From scripts/test_queries/ directory:
     python3 1_run_sample_queries.py                    # Run all queries
     python3 1_run_sample_queries.py -q 1               # Run only query 1
     python3 1_run_sample_queries.py -t my_table        # Use different table name
     
     # From project root:
-    python3 scripts/step9/1_run_sample_queries.py
-    python3 scripts/step9/1_run_sample_queries.py -q 2
+    python3 scripts/test_queries/1_run_sample_queries.py
+    python3 scripts/test_queries/1_run_sample_queries.py -q 2
 """
 import sys
 import argparse
@@ -271,7 +271,7 @@ LIMIT 10
     print()
     print("Next steps:")
     print("  1. Review query results above")
-    print("  2. Optionally create views: python3 scripts/step9/2_create_views.py")
+    print("  2. Optionally create views: python3 scripts/test_queries/2_create_views.py")
     print("  3. Proceed to Step 10: Text-to-SQL Interface")
 
 

@@ -4,7 +4,7 @@ Validate uploaded NYC Yellow Taxi Parquet files in S3.
 
 Usage:
     python3 3_validate_upload.py [OPTIONS]
-    python3 scripts/step4/3_validate_upload.py [OPTIONS]
+    python3 scripts/ingest_raw_data/3_validate_upload.py [OPTIONS]
 
 Options:
     -y, --year YEAR      Year to validate (default: 2025)
@@ -12,14 +12,14 @@ Options:
     -h, --help           Show this help message
 
 Examples:
-    # From scripts/step4/ directory:
+    # From scripts/ingest_raw_data/ directory:
     python3 3_validate_upload.py                  # Validate year 2025 (default)
     python3 3_validate_upload.py --year 2024      # Validate year 2024
     python3 3_validate_upload.py --bucket my-bucket  # Validate with custom bucket
     
     # From project root:
-    python3 scripts/step4/3_validate_upload.py
-    python3 scripts/step4/3_validate_upload.py --year 2024 --bucket my-bucket
+    python3 scripts/ingest_raw_data/3_validate_upload.py
+    python3 scripts/ingest_raw_data/3_validate_upload.py --year 2024 --bucket my-bucket
 """
 import sys
 import os
