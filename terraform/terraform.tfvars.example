@@ -1,0 +1,9 @@
+# Copy this file to terraform.tfvars and fill in your values
+# terraform.tfvars is gitignored and will not be committed
+
+region       = "us-east-1"
+project_name = "nyc-taxi-analytics"
+environment  = "dev"
+
+# Open AI API Key
+llm_api_key = "sk-xxxxx"

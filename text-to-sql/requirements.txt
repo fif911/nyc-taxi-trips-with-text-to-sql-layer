@@ -1,0 +1,77 @@
+# Text-to-SQL Interface - Dependencies
+# ============================================================================
+# Install with: pip install -r requirements.txt
+#
+# This file contains all Python dependencies needed for the Text-to-SQL
+# interface (Step 10) that enables natural language queries on NYC Taxi data.
+# ============================================================================
+
+# ============================================================================
+# Text-to-SQL Framework (Required)
+# ============================================================================
+# Vanna AI 2.0 - Open-source Python framework for Text-to-SQL using RAG
+# Provides natural language to SQL conversion with training capabilities
+# Includes FastAPI integration
+# Documentation: https://vanna.ai/
+vanna[fastapi]>=2.0.0
+
+# ChromaDB - Vector database for persistent agent memory
+# Required for ChromaAgentMemory to store DDLs and training data persistently
+# Documentation: https://www.trychroma.com/
+chromadb>=0.4.0
+
+# ============================================================================
+# LLM Providers (Required - choose based on your provider)
+# ============================================================================
+# OpenAI - Required if using OpenAI as LLM provider
+openai>=1.0.0
+
+# Anthropic - Optional, required if using Anthropic/Claude as LLM provider
+# anthropic>=0.18.0
+
+# ============================================================================
+# FastAPI Framework (Required)
+# ============================================================================
+# FastAPI - Modern, fast web framework for building APIs
+# Documentation: https://fastapi.tiangolo.com/
+fastapi>=0.104.0
+
+# Uvicorn - ASGI server for FastAPI
+# Documentation: https://www.uvicorn.org/
+uvicorn[standard]>=0.24.0
+
+# ============================================================================
+# AWS SDK (Required)
+# ============================================================================
+# Required for connecting to AWS Athena and Glue Data Catalog
+# - Athena: Execute SQL queries
+# - Glue: Access table schemas for training
+# - S3: Access query results
+boto3>=1.28.0
+
+# ============================================================================
+# Athena Connection (Required)
+# ============================================================================
+# PyAthena - Python DB API 2.0 (PEP 249) compliant client for AWS Athena
+# Required for executing SQL queries against Athena
+# Documentation: https://github.com/laughingman7743/PyAthena
+pyathena>=3.0.0
+
+# ============================================================================
+# Data Processing (Required)
+# ============================================================================
+# Pandas - For data manipulation and result processing
+# Used to process and format query results from Athena
+pandas>=2.0.0
+
+# Plotly - For interactive charting and visualizations
+# Required for Vanna's PlotlyChartGenerator tool
+# Documentation: https://plotly.com/python/
+plotly>=5.18.0
+
+# ============================================================================
+# Environment Configuration (Optional)
+# ============================================================================
+# python-dotenv - For loading environment variables from .env file
+# Useful for local development. In production, use SSM Parameter Store or IAM roles
+python-dotenv>=1.0.0

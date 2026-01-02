@@ -1,0 +1,89 @@
+# NYC Taxi Analytics Data Assets - Project Dependencies
+# ============================================================================
+# Install with: pip install -r requirements.txt
+#
+# This file contains all Python dependencies needed to run the project.
+# For specific subdirectories, see:
+#   - scripts/requirements.txt (for scripts only)
+#   - pyspark/requirements.txt (for PySpark jobs only)
+# ============================================================================
+
+# ============================================================================
+# Core AWS SDK (Required)
+# ============================================================================
+# Required for all scripts and utilities that interact with AWS services:
+# - S3 (data upload/download)
+# - Glue (crawlers, data catalog)
+# - EMR Serverless (job submission)
+# - Athena (query execution)
+# - SSM Parameter Store (configuration management)
+boto3>=1.28.0
+
+# ============================================================================
+# PySpark (Optional - for local development/testing only)
+# ============================================================================
+# Required for PySpark jobs in pyspark/jobs/
+# 
+# IMPORTANT: PySpark jobs run on EMR Serverless, so this package is only 
+# needed if you want to:
+# - Test PySpark jobs locally before deploying
+# - Develop and debug PySpark code locally
+# 
+# If you only need to run scripts (step4, step5, step7), you can skip this.
+# To install without PySpark: pip install boto3>=1.28.0
+pyspark>=3.4.0
+
+# ============================================================================
+# Text-to-SQL Interface (Required for Step 10)
+# ============================================================================
+# Vanna AI - Open-source Python framework for Text-to-SQL using RAG
+# Provides natural language to SQL conversion with training capabilities
+# Includes ChromaDB vector store and OpenAI integration
+# Pinned to 0.8.9 for stability
+# Documentation: https://github.com/vanna-ai/vanna
+vanna[chromadb,openai]==0.8.9
+
+# ChromaDB - Vector database for Vanna RAG functionality
+# Required for vanna.chromadb module
+# May need to be installed separately if vanna extras don't work
+chromadb>=0.4.0
+
+# Pydantic - Required by ChromaDB (dependency of Vanna)
+# Pydantic v2 with compatible pydantic_core version
+# Ensures compatibility between pydantic and pydantic_core
+pydantic>=2.0.0,<3.0.0
+pydantic_core>=2.0.0,<3.0.0
+
+# PyAthena - Python DB API 2.0 (PEP 249) compliant client for AWS Athena
+# Required for executing SQL queries against Athena in text-to-sql interface
+# Documentation: https://github.com/laughingman7743/PyAthena
+pyathena>=3.0.0
+
+# Streamlit - For building the interactive web interface
+# Provides UI for entering natural language queries and displaying results
+# Documentation: https://docs.streamlit.io/
+streamlit>=1.28.0
+
+# Plotly - Required dependency for Streamlit charting features
+# Streamlit uses plotly internally for visualization components
+# Pinned to 5.18.0 for compatibility with Streamlit 1.28.0
+# Plotly 6.x breaks compatibility with Streamlit 1.28.0
+# Documentation: https://plotly.com/python/
+plotly==5.18.0
+
+# Pandas - For data manipulation and result processing
+# Used to process and format query results from Athena
+pandas>=2.0.0
+
+# python-dotenv - For loading environment variables from .env file
+# Useful for local development. In production, use SSM Parameter Store or IAM roles
+python-dotenv>=1.0.0
+
+# ============================================================================
+# Standard Library (No installation needed)
+# ============================================================================
+# The following modules are part of Python standard library:
+# - sys, os, argparse, pathlib, urllib.request, gzip
+# - time, datetime, json, typing, zipfile, subprocess
+# They don't need to be installed via pip.
+

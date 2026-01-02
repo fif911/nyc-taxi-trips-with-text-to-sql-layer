@@ -1,0 +1,92 @@
+# Data files
+# Ignore raw data folder
+data/raw/
+
+# Terraform state files
+terraform.tfstate
+terraform.tfstate.*
+*.tfplan
+tfplan
+.terraform/
+outputs.txt
+# Note: .terraform.lock.hcl should be committed to ensure consistent provider versions
+
+# Terraform variable files (may contain secrets)
+# Uncomment if you want to ignore tfvars:
+# *.tfvars
+# *.tfvars.json
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.pyd
+*.pyo
+build/
+dist/
+*.egg-info/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+scripts/venv/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment variables
+.env
+.env.local
+.venv
+env/
+venv/
+ENV/
+
+# AWS credentials (if accidentally committed)
+.aws/
+credentials
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.cache
+*.gz
+*.zip
+*.html
+*.sh
+*.1
+*.hcl
+*.sqlite3
+*.bin
+*.tfvars
+terraform/terraform.tfvars
+# CSV files (but allow lookup CSVs in data/ directory)
+*.csv
+!data/
+!data/*.csv
+
+# Private key files
+terraform/key-pairs/
+*.pem

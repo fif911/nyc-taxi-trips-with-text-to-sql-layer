@@ -1,0 +1,11 @@
+# PySpark Jobs Requirements
+# This file is for PySpark jobs directory only
+# For full project dependencies, see ../requirements.txt
+# Note: PySpark jobs run on EMR Serverless, so pyspark is only needed for local testing
+
+# PySpark - Required for running/testing PySpark jobs locally
+pyspark>=3.4.0
+
+# AWS SDK for Python - Required for config_loader and AWS interactions
+boto3>=1.28.0
+
